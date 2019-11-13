@@ -20,7 +20,7 @@ import Geolocation from '@react-native-community/geolocation';
 import Geocoder from 'react-native-geocoding';
 
 
-export default class PostlostScreen extends React.Component {
+export default class EditlostScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,12 +32,15 @@ export default class PostlostScreen extends React.Component {
       signupText4: '',
       ImageSource: null,
       gps: '',
-      markers: ''
+      markers: '',
+      dataSourceLost: [],
     };
     this.addPostlost = this.addPostlost.bind(this);
     this.renderCategory = this.renderCategory.bind(this);
     this.renderMap = this.renderMap.bind(this)
     this.getLocation = this.getLocation.bind(this)
+    this.getCategory = this.getCategory.bind(this)
+    this.renderContentEdit = this.renderContentEdit.bind(this)
   }
 
   onTextChange1 = (value) => {
@@ -50,7 +53,7 @@ export default class PostlostScreen extends React.Component {
   onTextChange3 = (value) => {
     this.setState({ signupText3: value })
   }
- 
+
   onTextChange4 = (value) => {
     this.setState({ signupText4: value })
   }
@@ -75,7 +78,6 @@ export default class PostlostScreen extends React.Component {
         .catch(error => console.warn(error));
 
 
-      this.setState({ gps: '' })
       this.setState({ gps: info })
       this.setState({ markers: info })
       this.setState({ location_drag: info.coords })
@@ -84,30 +86,29 @@ export default class PostlostScreen extends React.Component {
   }
 
   renderMap() {
+    var arr = [];
+    if (this.state.gps.coords.latitude != '' && this.state.gps.coords.latitude != undefined && this.state.gps.coords.longitude != '' && this.state.gps.coords.longitude != undefined) {
 
-    if (this.state.gps != '' && this.state.gps != undefined) {
-      // console.warn(this.state.gps)
+      // console.warn('gpsssssssssssssssssssss', this.state.gps.coords)
       return (
         <MapView
           style={styles.map}
           initialRegion={{
-            latitude: this.state.gps.coords.latitude,
-            longitude: this.state.gps.coords.longitude,
+            latitude: parseFloat(this.state.gps.coords.latitude),
+            longitude: parseFloat(this.state.gps.coords.longitude),
             latitudeDelta: 0.04,
             longitudeDelta: 0.05,
           }}
-          region={{
-            latitude: this.state.gps.coords.latitude,
-            longitude: this.state.gps.coords.longitude,
-            latitudeDelta: 0.04,
-            longitudeDelta: 0.05,
-          }}
+
           showsUserLocation={true}
         >
 
 
           <Marker draggable
-            coordinate={this.state.gps.coords}
+            coordinate={{
+              latitude: parseFloat(this.state.gps.coords.latitude),
+              longitude: parseFloat(this.state.gps.coords.longitude),
+            }}
             onDragEnd={(e) => {
               this.setState({ location_drag: e.nativeEvent.coordinate })
               Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
@@ -166,7 +167,8 @@ export default class PostlostScreen extends React.Component {
     const signup_id = await AsyncStorage.getItem('signup_id')
 
     var data = new FormData();
-    data.append('action', 'addpostlost');
+    data.append('action', 'editpostlost');
+    data.append('lostid', this.props.navigation.getParam('lost_id'));
     data.append('signupid', signup_id);
     data.append('signup1', this.state.signupText1);
     data.append('signup2', this.state.selected2);
@@ -174,15 +176,16 @@ export default class PostlostScreen extends React.Component {
     data.append('signup4', this.state.signupText4);
     data.append('lat', this.state.location_drag.latitude);
     data.append('lon', this.state.location_drag.longitude);
+    if (this.state.ImageUri != '' && this.state.ImageUri != null) {
     data.append('image',
       {
         uri: this.state.ImageUri,
         name: 'image',
         type: 'image/jpg'
       });
-
-// console.warn(data)
-    axios.post('http://192.168.0.111/lostandfound/api/addpostlost.php', data,
+    }
+    // console.warn(data)
+    axios.post('http://192.168.0.111/lostandfound/api/addeditlost.php', data,
       { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(response => {
         this.props.navigation.goBack();
@@ -196,10 +199,7 @@ export default class PostlostScreen extends React.Component {
   // }
 
 
-
-
-  componentDidMount() {
-
+  getCategory() {
     axios.post('http://192.168.0.111/lostandfound/api/getcategory.php', JSON.stringify({
 
       action: 'category',
@@ -207,7 +207,7 @@ export default class PostlostScreen extends React.Component {
     }))
       .then(response => {
         this.setState({
-          isLoading: false,
+
           dataSource: response.data
         })
 
@@ -215,8 +215,46 @@ export default class PostlostScreen extends React.Component {
       .catch(err => {
         throw err;
       });
+  }
 
-    this.getLocation();
+  componentDidMount() {
+
+    axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
+
+      action: 'commentlost',
+      id: this.props.navigation.getParam('lost_id')
+
+    }))
+      .then(response => {
+        var coords = {
+          latitude: response.data.lost_latitude,
+          longitude: response.data.lost_longitude
+        }
+
+        this.setState({
+
+          dataSourceLost: response.data,
+          signupText1: response.data.lost_topic,
+          selected2: response.data.lost_type,
+          signupText3: response.data.lost_detail,
+          signupText4: response.data.lost_location,
+          gps: {
+            coords: coords
+          },
+
+          location_drag: coords
+
+
+        })
+
+
+      })
+      .catch(err => {
+        throw err;
+      });
+    // console.warn('dataSourceLost', this.state.dataSourceLost)
+    this.getCategory();
+    // this.getLocation();
 
   }
 
@@ -276,18 +314,14 @@ export default class PostlostScreen extends React.Component {
     });
   }
 
-  uploadImageToServer = () => {
 
+  renderContentEdit() {
 
+    var arr = [];
+    if (this.state.signupText1 != '' && this.state.selected2 != '' && this.state.signupText3 != '' && this.state.gps != '') {
 
-  }
-  render() {
-    const renderCategory = this.renderCategory;
-    return (
-      <Container>
+      arr.push(
         <Content>
-
-
           <Left>
             <Body >
               <Text style={styles.lableTopicpostlost}>1. ระบุหัวข้อ</Text>
@@ -296,29 +330,32 @@ export default class PostlostScreen extends React.Component {
 
 
           <Item regular style={styles.textBox}>
-            <Input onChangeText={this.onTextChange1} value={this.state.signupText1} style={styles.textboxInsert} />
+            <Input onChangeText={this.onTextChange1} value={this.state.signupText1} style={styles.textboxInsert}>
+
+            </Input>
           </Item>
 
 
           <Left>
             <Body >
-              <Text style={styles.lableTopicpostlost}> 2. ชนิดสิ่งของ</Text>
+              <Text style={styles.lableTopicpostlost}>  2. ชนิดสิ่งของ</Text>
             </Body>
           </Left>
 
 
           <Item picker style={styles.typeInput}>
-            <Picker onChange={this.onTextChange2} value={this.state.signupText2}
+            <Picker onChange={this.onTextChange2} value={this.state.selected2}
               mode="dropdown"
               iosIcon={<Icon name="arrow-down" />}
               style={{ width: undefined }}
+
               placeholder="Select your SIM"
               placeholderStyle={{ color: "#bfc6ea" }}
               placeholderIconColor="#007aff"
               selectedValue={this.state.selected2}
               onValueChange={this.onValueChange2.bind(this)}
             >
-              {renderCategory()}
+              {this.renderCategory()}
 
 
             </Picker>
@@ -334,7 +371,9 @@ export default class PostlostScreen extends React.Component {
 
 
           <Form style={styles.textareaBox}>
-            <Textarea onChangeText={this.onTextChange3} value={this.state.signupText3} style={styles.textboxInsert3} rowSpan={5} bordered />
+            <Textarea onChangeText={this.onTextChange3} value={this.state.signupText3} style={styles.textboxInsert3} rowSpan={5} bordered>
+
+            </Textarea>
           </Form>
 
           <Left>
@@ -346,7 +385,7 @@ export default class PostlostScreen extends React.Component {
 
           <CardItem cardBody style={styles.imageReadnews}>
             {this.state.ImageSource === null ?
-              <Image source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/lost/default.png' }} style={{ height: 200, width: null, flex: 1 }} /> :
+              <Image source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/lost/' + this.state.dataSourceLost.lost_img }} style={{ height: 200, width: null, flex: 1 }} /> :
               <Image style={{ height: 200, width: null, flex: 1 }} source={this.state.ImageSource} />
             }
 
@@ -373,7 +412,9 @@ export default class PostlostScreen extends React.Component {
             <Input
               onChangeText={this.onTextChange4}
               value={this.state.signupText4}
-              style={styles.textboxInsert} />
+              style={styles.textboxInsert}>
+
+            </Input>
           </Item>
 
           <CardItem>
@@ -404,6 +445,18 @@ export default class PostlostScreen extends React.Component {
 
 
         </Content>
+      )
+      return arr;
+    }
+
+
+
+  }
+  render() {
+    const renderContentEdit = this.renderContentEdit;
+    return (
+      <Container>
+        {renderContentEdit()}
 
       </Container>
     );
@@ -529,16 +582,15 @@ const styles = StyleSheet.create({
   },
 
   nameButton: {
-    fontSize: 15,
     fontFamily: "Kanit-Regular",
 
+    fontSize: 15,
     paddingLeft: 5
 
 
   },
 
   addimgButton: {
-    
     marginLeft: 5,
     marginTop: 6,
     width: 400

@@ -27,7 +27,7 @@ export default class ReadnewsScreen extends React.Component {
   }
 
   componentDidMount() {
-    axios.post('http://192.168.0.105/lostandfound/api/getnews.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getnews.php', JSON.stringify({
 
       action: 'readnews',
       id: this.props.navigation.getParam('news_id')
@@ -59,7 +59,7 @@ export default class ReadnewsScreen extends React.Component {
             
 
             <CardItem cardBody style={styles.imageReadnews}>
-              <Image source={{uri: 'http://192.168.0.105/lostandfound/img_upload/news/'+this.state.dataSource.news_img }} style={{height: 200, width: null, flex: 1}}/>
+              <Image source={{uri: 'http://192.168.0.111/lostandfound/img_upload/news/'+this.state.dataSource.news_img }} style={{height: 200, width: null, flex: 1}}/>
             </CardItem>
 
             <CardItem >
@@ -132,6 +132,7 @@ imageReadnews: {
 textReadnews: {
  
   fontSize: 17,
+  fontFamily: "Kanit-Regular",
   paddingBottom: 0,
   marginLeft: 0,
   marginRight:0,
@@ -143,6 +144,8 @@ textReadnews2: {
   
 
   fontSize: 14,
+  fontFamily: "Kanit-Regular",
+
   marginTop: 8,
   paddingBottom: 0,
   marginLeft: 0,
@@ -155,6 +158,8 @@ textReadnews3: {
   fontSize: 10,
   paddingBottom: 3,
   marginLeft: 0,
+  fontFamily: "Kanit-Regular",
+
   marginRight:0,
   color: "#333333"
   

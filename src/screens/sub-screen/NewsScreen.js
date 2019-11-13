@@ -39,7 +39,7 @@ export class NewsScreen extends React.Component {
 
   componentDidMount() {
 
-    axios.post('http://192.168.0.105/lostandfound/api/getnews.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getnews.php', JSON.stringify({
 
       action: 'news',
 
@@ -76,7 +76,7 @@ export class NewsScreen extends React.Component {
               >
                 <CardItem>
                   <TouchableHighlight>
-                    <ResponsiveImage style={styles.imgnews} source={{ uri: 'http://192.168.0.105/lostandfound/img_upload/news/' + this.state.dataSource[i].news_img }} initWidth="125" initHeight="120" />
+                    <ResponsiveImage style={styles.imgnews} source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/news/' + this.state.dataSource[i].news_img }} initWidth="125" initHeight="120" />
                   </TouchableHighlight>
                   <Body>
                     <Text style={styles.textCategoty}>
@@ -204,6 +204,14 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginLeft: 10,
     color: '#333333',
+
+  },
+  barsearch: {
+    justifyContent: "center",
+    paddingLeft: 0,
+    paddingRight: 0,
+    backgroundColor: "#363636",
+    height: 50
 
   }
 });

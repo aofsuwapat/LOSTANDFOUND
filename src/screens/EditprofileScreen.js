@@ -75,8 +75,8 @@ export default class EditprofileScreen extends React.Component {
         });
     }
 
-    console.warn(data);
-    await axios.post('http://192.168.0.105/lostandfound/api/addeditprofile.php', data,
+    // console.warn(data);
+    await axios.post('http://192.168.0.111/lostandfound/api/addeditprofile.php', data,
       { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(response => {
         this.props.navigation.goBack();
@@ -92,14 +92,16 @@ export default class EditprofileScreen extends React.Component {
 
 
   async componentDidMount() {
+
+    
     const signup_id = await AsyncStorage.getItem('signup_id')
-    axios.post('http://192.168.0.105/lostandfound/api/getprofile.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getprofile.php', JSON.stringify({
 
       action: 'profile',
       signupid: signup_id
     }))
       .then(response => {
-        console.warn(response.data)
+        // console.warn(response.data)
         this.setState({
           isLoading: false,
           dataSource: response.data,
@@ -171,7 +173,7 @@ export default class EditprofileScreen extends React.Component {
           <CardItem style={styles.direction}>
             <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
               {this.state.ImageSource === null ?
-                <Thumbnail style={styles.sizeimageprofile} source={{ uri: 'http://192.168.0.105/lostandfound/img_upload/signup/' + this.state.dataSource.signup_img }} /> :
+                <Thumbnail style={styles.sizeimageprofile} source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/signup/' + this.state.dataSource.signup_img }} /> :
                 <Thumbnail style={styles.sizeimageprofile} source={this.state.ImageSource} />
               }
             </TouchableOpacity>
@@ -331,7 +333,8 @@ const styles = StyleSheet.create({
   },
 
   nameButton3: {
-    fontSize: 13,
+    fontSize: 14,
+    fontFamily: "Kanit-Regular",
     paddingLeft: 120,
     paddingRight: 110
 
@@ -340,6 +343,7 @@ const styles = StyleSheet.create({
 
   namechageimageprofile: {
     color: "#0066FF",
+    fontFamily: "Kanit-Regular",
     fontSize: 13,
     marginTop: -5
 
@@ -348,7 +352,10 @@ const styles = StyleSheet.create({
 
   namechageimageprofile2: {
     color: "#FFFFFF",
+    fontFamily: "Kanit-Regular",
     fontSize: 15,
+
+    // marginLeft:5,
     marginTop: 0
 
 
@@ -357,8 +364,9 @@ const styles = StyleSheet.create({
   namechageimageprofile3: {
     color: "#FFFFFF",
     fontSize: 17,
-    paddingLeft: 35,
-    fontWeight: '500',
+    paddingLeft: 40,
+    // alignSelf: 'center',
+    fontFamily: "Kanit-Medium",
     marginTop: 0
 
 
@@ -368,6 +376,7 @@ const styles = StyleSheet.create({
   username: {
     color: "#333333",
     fontSize: 14,
+    fontFamily: "Kanit-Regular",
     marginTop: -13,
     marginBottom: -10,
     marginLeft: 40
@@ -385,6 +394,7 @@ const styles = StyleSheet.create({
   },
 
   sizebuttonlogout2: {
+
     borderRadius: 28,
     right: 0,
     position: "absolute",
@@ -396,6 +406,8 @@ const styles = StyleSheet.create({
   insertComment: {
 
     width: 300,
+    fontSize: 13,
+    fontFamily: "Kanit-Regular",
     paddingLeft: 10,
     paddingRight: 10,
     height: 40,
@@ -406,6 +418,8 @@ const styles = StyleSheet.create({
   insertComment2: {
 
     width: 300,
+    fontSize: 13,
+    fontFamily: "Kanit-Regular",
     paddingLeft: 10,
     paddingRight: 10,
     height: 40,
@@ -415,6 +429,7 @@ const styles = StyleSheet.create({
 
   nameButton: {
     fontSize: 13,
+    fontFamily: "Kanit-Regular",
 
   }
 

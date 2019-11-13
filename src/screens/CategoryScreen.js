@@ -31,9 +31,13 @@ export default class CategoryScreen extends React.Component {
     };
   };
 
+  Mapicon(category_id) {
+    this.props.navigation.navigate('Mapicon',{category_id : category_id})
+  }
+
   componentDidMount() {
 
-    axios.post('http://192.168.0.105/lostandfound/api/getcategory.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getcategory.php', JSON.stringify({
 
       action: 'category',
 
@@ -63,10 +67,10 @@ export default class CategoryScreen extends React.Component {
 
         
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this.Mapicon.bind(this,this.state.dataSource[i].category_id)}>
               <View style={styles.menuBox}>
 
-                <Image style={styles.icon} source={{ uri: 'http://192.168.0.105/lostandfound/img_upload/category/' + this.state.dataSource[i].category_img }} />
+                <Image style={styles.icon} source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/category/' + this.state.dataSource[i].category_img }} />
                 
                 <Text style={styles.info}>
                   {this.state.dataSource[i].category_name}
@@ -121,7 +125,7 @@ export default class CategoryScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 8,
+    paddingTop: 9,
     paddingLeft: 10,
     flexDirection: 'row',
     flexWrap: 'wrap'
@@ -133,15 +137,22 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 13
+    marginBottom:10,
+    marginTop:5,
+    marginLeft:13,
+    marginRight:10
+    // margin: 13
+
   },
   icon: {
     width: 50,
+
     height: 50
   
   },
   info: {
-    fontSize: 16,
+    fontSize: 17,
+    fontFamily: "Kanit-Regular",
     marginTop: 10,
     color: "#696969"
   }

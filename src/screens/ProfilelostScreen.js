@@ -41,13 +41,13 @@ var DESTRUCTIVE_INDEX = 1;
 var CANCEL_INDEX = 2;
 
 
-export default class ProfilefoundScreen extends React.Component {
+export default class ProfilelostScreen extends React.Component {
   constructor(props) {
     super(props);
 
     // this.gotoComment = this.gotoComment.bind(this);
-    this.renderFound = this.renderFound.bind(this);
-    this.getFound = this.getFound.bind(this);
+    this.renderLost = this.renderLost.bind(this);
+    this.getLost = this.getLost.bind(this);
     this.defaultTitles = [{ title: 'Camera', action: () => { console.log('click Camera'); } },
     { title: 'Choose from Album', actionStyle: 'default', action: () => { console.log('click Choose from Album'); } },
     { title: 'Delete', actionStyle: 'destructive', action: () => { console.log('click Delete'); } },
@@ -67,27 +67,27 @@ export default class ProfilefoundScreen extends React.Component {
   };
   // gotoComment() {
   //   console.warn(this.props.navigation)
-  //   this.props.navigation.navigate('Commentfound')
+  //   this.props.navigation.navigate('Commentlost')
   // }
 
-  Commentfound(found_id) {
-    this.props.navigation.navigate('Commentfound', { found_id: found_id })
-    // console.warn(found_id)
+  Commentlost(lost_id) {
+    this.props.navigation.navigate('Commentlost', { lost_id: lost_id })
+    // console.warn(lost_id)
   }
 
-  async Likefound(found_id) {
+  async Likelost(lost_id) {
     const signup_id = await AsyncStorage.getItem('signup_id')
     // console.warn(signup_id)
-    axios.post('http://192.168.0.111/lostandfound/api/getlikefound.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getlikelost.php', JSON.stringify({
 
-      action: 'addpostfound',
+      action: 'addpostlost',
       signupid: signup_id,
-      likefoundid: found_id
+      likelostid: lost_id
 
     }))
       .then(response => {
         // console.warn(response.data)
-        this.getFound();
+        this.getLost();
 
       })
       .catch(err => {
@@ -96,15 +96,15 @@ export default class ProfilefoundScreen extends React.Component {
 
   }
 
-  Editfound() {
-    this.props.navigation.navigate('Editfound')
+  Editlost() {
+    this.props.navigation.navigate('Editlost')
   }
 
-  async getFound() {
+  async getLost() {
     const signup_id = await AsyncStorage.getItem('signup_id')
-    axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-      action: 'founduser',
+      action: 'lostuser',
       id: signup_id
     }))
       .then(response => {
@@ -121,7 +121,7 @@ export default class ProfilefoundScreen extends React.Component {
 
   }
 
-  deletePostfound = (found_id) => {
+  deletePostlost = (lost_id) => {
 
     Alert.alert(
       '',
@@ -135,13 +135,13 @@ export default class ProfilefoundScreen extends React.Component {
         {
           text: 'ตกลง',
           onPress: () => {
-            axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+            axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-              action: 'deletepostfound',
-              id: found_id
+              action: 'deletepostlost',
+              id: lost_id
             }))
               .then(response => {
-                this.getFound();
+                this.getLost();
               })
               .catch(err => {
                 throw err;
@@ -165,9 +165,9 @@ export default class ProfilefoundScreen extends React.Component {
 
   async componentDidMount() {
     const signup_id = await AsyncStorage.getItem('signup_id')
-    axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-      action: 'founduser',
+      action: 'lostuser',
       id: signup_id
     }))
       .then(response => {
@@ -183,37 +183,37 @@ export default class ProfilefoundScreen extends React.Component {
 
 
   }
-  showActionSheet(found_id) {
-    this.props.navigation.navigate('Editfound', { found_id: found_id })
+  showActionSheet(lost_id) {
+    this.props.navigation.navigate('Editlost', { lost_id: lost_id })
   }
-  renderFound() {
+  renderLost() {
     var arr = [];
     var actionsheet = [];
     // console.warn('xxxx', this.state.dataSource)
 
     if (this.state.dataSource.length > 0) {
       for (var i = 0; i < this.state.dataSource.length; i++) {
-        const found_id = this.state.dataSource[i].found_id
+        const lost_id = this.state.dataSource[i].lost_id
 
         arr.push(
 
           <CardItem style={styles.direction}>
 
-            <Card style={styles.cardfound}>
-              <TouchableOpacity onPress={this.Commentfound.bind(this, this.state.dataSource[i].found_id)}
+            <Card style={styles.cardlost}>
+              <TouchableOpacity onPress={this.Commentlost.bind(this, this.state.dataSource[i].lost_id)}
                 style={{ borderBottomColor: "#ADADAD", borderBottomWidth: 0 }}
               >
                 <CardItem style={styles.cardContent}>
 
-                  {/* <TouchableOpacity onPress={this.deletePostfound.bind(this, this.state.dataSource[i].found_id)}style={styles.bottonDelete}>
+                  {/* <TouchableOpacity onPress={this.deletePostlost.bind(this, this.state.dataSource[i].lost_id)}style={styles.bottonDelete}>
                     <Icon name='ios-close' style={{ fontSize: 30, color: 'red' }} />
                   </TouchableOpacity> */}
 
                   <TouchableOpacity style={styles.bottonDelete2}
                     onPress={() => {
                       this.setState({
-                        titles: [{ title: 'แก้ไข', action: () => { this.props.navigation.navigate('Editfound', { found_id: found_id }); } },
-                        { title: 'ลบ', actionStyle: 'destructive', action: () => { this.deletePostfound(found_id); } },
+                        titles: [{ title: 'แก้ไข', action: () => { this.props.navigation.navigate('Editlost', { lost_id: lost_id }); } },
+                        { title: 'ลบ', actionStyle: 'destructive', action: () => { this.deletePostlost(lost_id); } },
                         { title: 'ยกเลิก', actionStyle: 'cancel', action: () => { console.warn('click Cancel'); } }]
                       }, () => { this.refs.picker.show(); })
                     }}
@@ -223,7 +223,7 @@ export default class ProfilefoundScreen extends React.Component {
                     <Icon name='ios-more' style={{ fontSize: 25, color: 'black' }} />
                   </TouchableOpacity>
 
-                  {/* <TouchableOpacity onPress={this.Editfound.bind(this)} >
+                  {/* <TouchableOpacity onPress={this.Editlost.bind(this)} >
                     <Icon name='md-create' style={{ fontSize: 25, color: 'black' }} />
                   </TouchableOpacity> */}
 
@@ -239,7 +239,7 @@ export default class ProfilefoundScreen extends React.Component {
 
 
                     <Text style={styles.textContent}>
-                      {this.state.dataSource[i].found_topic}
+                      {this.state.dataSource[i].lost_topic}
                     </Text>
 
 
@@ -247,7 +247,7 @@ export default class ProfilefoundScreen extends React.Component {
 
                       <Left>
                         <Button transparent style={styles.iconLikeComent}
-                          onPress={this.Likefound.bind(this, this.state.dataSource[i].found_id)}>
+                          onPress={this.Likelost.bind(this, this.state.dataSource[i].lost_id)}>
                           <Icon
                             active
                             name="thumbs-up"
@@ -275,7 +275,7 @@ export default class ProfilefoundScreen extends React.Component {
 
                       <Right>
                         <Text style={styles.fontTimeLikeComent}>
-                          {this.state.dataSource[i].found_date_format}
+                          {this.state.dataSource[i].lost_date_format}
                         </Text>
                       </Right>
 
@@ -303,11 +303,11 @@ export default class ProfilefoundScreen extends React.Component {
 
 
   render() {
-    const renderFound = this.renderFound;
+    const renderLost = this.renderLost;
     return (
       <Container style={{ backgroundColor: "white" }}>
         <NavigationEvents
-          onWillFocus={payload => { this.getFound() }}
+          onWillFocus={payload => { this.getLost() }}
 
         />
         <TouchableOpacity
@@ -339,8 +339,8 @@ export default class ProfilefoundScreen extends React.Component {
               containerStyle={{ margin: 10, borderRadius: 5 }}
               onClose={(obj) => { console.log('action sheet closed! clicked:' + JSON.stringify(obj)); }}
             />
-
-            {renderFound()}
+            
+            {renderLost()}
 
           </View>
 
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     marginLeft: -3
   },
 
-  cardfound: {
+  cardlost: {
     flex: 0,
     borderColor: "white",
     marginBottom: -10,

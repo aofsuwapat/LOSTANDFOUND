@@ -58,7 +58,10 @@ export class FoundScreen extends React.Component {
   async Likefound(found_id) {
     const signup_id = await AsyncStorage.getItem('signup_id')
     // console.warn(signup_id)
-    axios.post('http://192.168.0.105/lostandfound/api/getlikefound.php', JSON.stringify({
+    if(signup_id != 'Guest'){
+
+  
+    axios.post('http://192.168.0.111/lostandfound/api/getlikefound.php', JSON.stringify({
 
       action: 'addpostfound',
       signupid: signup_id,
@@ -73,14 +76,14 @@ export class FoundScreen extends React.Component {
       .catch(err => {
         throw err;
       });
-
+    }
   }
 
 
   async getFound() {
     const signup_id = await AsyncStorage.getItem('signup_id')
 
-    await axios.post('http://192.168.0.105/lostandfound/api/getfound.php', JSON.stringify({
+    await axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
       signup_id: signup_id,
       action: 'found',
 
@@ -271,14 +274,17 @@ const styles = StyleSheet.create({
   },
 
   textCategoty: {
-    fontSize: 10,
+    fontSize: 11,
+    fontFamily: "Kanit-Regular",
     paddingBottom: 7,
     marginLeft: 10,
     color: "#8d8d8d"
   },
 
   textContent: {
-    fontSize: 15,
+    fontSize: 16,
+    fontFamily: "Kanit-Regular",
+
     paddingBottom: 0,
     marginLeft: 10,
     color: "#333333"
@@ -298,23 +304,29 @@ const styles = StyleSheet.create({
   iconLikeComent: {
     color: "#8d8d8d",
     fontSize: 18,
+    
     marginLeft: -3
   },
 
   iconLikeComent2: {
     color: "#8d8d8d",
     fontSize: 22,
+    
     marginLeft: -3
   },
 
   fontLikeComent: {
     color: "#8d8d8d",
     fontSize: 12,
-    paddingLeft: 8
+    fontFamily: "Kanit-Regular",
+
+    paddingLeft: 7
   },
   fontTimeLikeComent: {
     color: "#8d8d8d",
     fontSize: 12,
+    fontFamily: "Kanit-Regular",
+
     paddingLeft: 8
   }
 });

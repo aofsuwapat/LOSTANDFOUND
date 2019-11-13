@@ -21,7 +21,7 @@ import getDirections from 'react-native-google-maps-directions'
 import axios from 'axios'
 
 
-export default class CommentfoundScreen extends React.Component {
+export default class CommentlostScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -32,11 +32,11 @@ export default class CommentfoundScreen extends React.Component {
       markers: ''
     };
 
-    this.renderFound = this.renderFound.bind(this);
+    this.renderLost = this.renderLost.bind(this);
     this.renderComment = this.renderComment.bind(this);
 
     this.addComment = this.addComment.bind(this);
-    this.renderCommentFound = this.renderCommentFound.bind(this);
+    this.renderCommentLost = this.renderCommentLost.bind(this);
     this.getComment = this.getComment.bind(this);
 
     this.renderMap = this.renderMap.bind(this)
@@ -63,8 +63,8 @@ export default class CommentfoundScreen extends React.Component {
         longitude: source_coords.longitude
       },
       destination: {
-        latitude: dest_coords.found_latitude,
-        longitude: dest_coords.found_longitude
+        latitude: dest_coords.lost_latitude,
+        longitude: dest_coords.lost_longitude
       },
       params: [
         {
@@ -79,8 +79,8 @@ export default class CommentfoundScreen extends React.Component {
 
       waypoints: [
         {
-          latitude: dest_coords.found_latitude,
-          longitude: dest_coords.found_longitude
+          latitude: dest_coords.lost_latitude,
+          longitude: dest_coords.lost_longitude
         },
       ]
     }
@@ -95,14 +95,14 @@ export default class CommentfoundScreen extends React.Component {
         <MapView
           style={styles.map}
           initialRegion={{
-            latitude: parseFloat(this.state.dataSource.found_latitude),
-            longitude: parseFloat(this.state.dataSource.found_longitude),
+            latitude: parseFloat(this.state.dataSource.lost_latitude),
+            longitude: parseFloat(this.state.dataSource.lost_longitude),
             latitudeDelta: 0.04,
             longitudeDelta: 0.05,
           }}
           region={{
-            latitude: parseFloat(this.state.dataSource.found_latitude),
-            longitude: parseFloat(this.state.dataSource.found_longitude),
+            latitude: parseFloat(this.state.dataSource.lost_latitude),
+            longitude: parseFloat(this.state.dataSource.lost_longitude),
             latitudeDelta: 0.04,
             longitudeDelta: 0.05,
           }}
@@ -112,8 +112,8 @@ export default class CommentfoundScreen extends React.Component {
 
           <Marker
             coordinate={{
-              latitude: parseFloat(this.state.dataSource.found_latitude),
-              longitude: parseFloat(this.state.dataSource.found_longitude)
+              latitude: parseFloat(this.state.dataSource.lost_latitude),
+              longitude: parseFloat(this.state.dataSource.lost_longitude)
             }}
 
 
@@ -126,7 +126,7 @@ export default class CommentfoundScreen extends React.Component {
   }
 
 
-  deleteCommentfound(comment_id) {
+  deleteCommentlost(comment_id) {
 
     Alert.alert(
       '',
@@ -140,9 +140,9 @@ export default class CommentfoundScreen extends React.Component {
         {
           text: 'ตกลง',
           onPress: () => {
-            axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+            axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-              action: 'deletecommentfound',
+              action: 'deletecommentlost',
               id: comment_id
             }))
               .then(response => {
@@ -163,20 +163,20 @@ export default class CommentfoundScreen extends React.Component {
   async addComment() {
     const signup_id = await AsyncStorage.getItem('signup_id')
     await this.setState({ signup_id: signup_id });
-    axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-      action: 'addcommentfound',
+      action: 'addcommentlost',
       comment: this.state.commentText,
       signupid: signup_id,
-      id: this.props.navigation.getParam('found_id')
+      id: this.props.navigation.getParam('lost_id')
     }))
       .then(response => {
         this.setState({ commentText: '' })
 
-        axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+        axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-          action: 'getcommentfound',
-          id: this.props.navigation.getParam('found_id')
+          action: 'getcommentlost',
+          id: this.props.navigation.getParam('lost_id')
 
         }))
           .then(response => {
@@ -199,10 +199,10 @@ export default class CommentfoundScreen extends React.Component {
 
 
   getComment() {
-    axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-      action: 'getcommentfound',
-      id: this.props.navigation.getParam('found_id')
+      action: 'getcommentlost',
+      id: this.props.navigation.getParam('lost_id')
 
     }))
       .then(response => {
@@ -223,10 +223,10 @@ export default class CommentfoundScreen extends React.Component {
   async componentDidMount() {
     const signup_id = await AsyncStorage.getItem('signup_id')
     await this.setState({ signup_id: signup_id });
-    axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-      action: 'commentfound',
-      id: this.props.navigation.getParam('found_id')
+      action: 'commentlost',
+      id: this.props.navigation.getParam('lost_id')
 
     }))
       .then(response => {
@@ -240,10 +240,10 @@ export default class CommentfoundScreen extends React.Component {
         throw err;
       });
 
-    axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
-      action: 'getcommentfound',
-      id: this.props.navigation.getParam('found_id')
+      action: 'getcommentlost',
+      id: this.props.navigation.getParam('lost_id')
 
     }))
       .then(response => {
@@ -288,7 +288,7 @@ export default class CommentfoundScreen extends React.Component {
 }
 
 
-renderFound() {
+renderLost() {
   var arr = [];
   // console.warn('xxxx', this.state.dataSource)
 
@@ -321,7 +321,7 @@ renderFound() {
 
               <Row>
                 <Text style={styles.fontTimeLikeComent5}>
-                  {this.state.dataSource.found_date_format}
+                  {this.state.dataSource.lost_date_format}
                 </Text>
               </Row>
 
@@ -334,15 +334,15 @@ renderFound() {
         <CardItem >
           <Left>
             <Body>
-              <Text style={styles.texttopicReadpostfound}>
-                {this.state.dataSource.found_topic}
+              <Text style={styles.texttopicReadpostlost}>
+                {this.state.dataSource.lost_topic}
               </Text>
             </Body>
           </Left>
         </CardItem>
 
-        <CardItem cardBody style={styles.imageReadpostfound}>
-          <Image source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/found/' + this.state.dataSource.found_img }} style={{ height: 200, width: null, flex: 1 }} />
+        <CardItem cardBody style={styles.imageReadpostlost}>
+          <Image source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/lost/' + this.state.dataSource.lost_img }} style={{ height: 200, width: null, flex: 1 }} />
 
         </CardItem>
 
@@ -363,8 +363,8 @@ renderFound() {
             </Col>
 
             <Col >
-              <Text style={styles.textReadpostfound5}>
-                {this.state.dataSource.found_location}
+              <Text style={styles.textReadpostlost5}>
+                {this.state.dataSource.lost_location}
               </Text>
             </Col>
           </Grid>
@@ -375,8 +375,8 @@ renderFound() {
         <CardItem >
           <Left>
             <Body>
-              <Text style={styles.textReadpostfound}>
-                {this.state.dataSource.found_detail}
+              <Text style={styles.textReadpostlost}>
+                {this.state.dataSource.lost_detail}
               </Text>
             </Body>
           </Left>
@@ -402,7 +402,7 @@ renderFound() {
 }
 
 
-renderCommentFound() {
+renderCommentLost() {
   var arr = [];
   // console.warn('xxxx',this.state.dataSource)
   if (this.state.dataCommentSource.length > 0 && this.state.signup_id != '' && this.state.signup_id != undefined) {
@@ -419,20 +419,20 @@ renderCommentFound() {
 
             <Left>
 
-              <Thumbnail style={styles.profilecommentReadpostfound} source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/signup/' + this.state.dataCommentSource[i].signup_img }} />
+              <Thumbnail style={styles.profilecommentReadpostlost} source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/signup/' + this.state.dataCommentSource[i].signup_img }} />
 
               <Text style={styles.fontTimeLikeComent1}>
                 {this.state.dataCommentSource[i].signup_username}
               </Text>
 
               <Text style={styles.fontTimeLikeComent2}>
-                {this.state.dataCommentSource[i].found_date_format}
+                {this.state.dataCommentSource[i].lost_date_format}
               </Text>
 
             </Left>
 
             {this.state.dataCommentSource[i].comment_user == this.state.signup_id ?
-              <TouchableOpacity onPress={this.deleteCommentfound.bind(this, this.state.dataCommentSource[i].comment_id)} style={styles.bottonDelete}>
+              <TouchableOpacity onPress={this.deleteCommentlost.bind(this, this.state.dataCommentSource[i].comment_id)} style={styles.bottonDelete}>
                 <Icon name='ios-close' style={{ fontSize: 30, color: 'red' }} />
               </TouchableOpacity> : <Text></Text>
             }
@@ -445,7 +445,7 @@ renderCommentFound() {
           <CardItem style={styles.cardComment}>
             <Left>
               <Body>
-                <Text style={styles.textcommentReadpostfound}>
+                <Text style={styles.textcommentReadpostlost}>
                   {this.state.dataCommentSource[i].comment_text}
                 </Text>
               </Body>
@@ -478,9 +478,9 @@ render() {
 
 
 
-        {this.renderFound()}
+        {this.renderLost()}
 
-        {this.renderCommentFound()}
+        {this.renderCommentLost()}
 
 
 
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
-  texttopicReadpostfound: {
+  texttopicReadpostlost: {
 
     fontSize: 16,
     paddingBottom: 0,
@@ -556,7 +556,7 @@ const styles = StyleSheet.create({
   },
 
 
-  textReadpostfound: {
+  textReadpostlost: {
 
     fontSize: 13,
     fontFamily: "Kanit-Regular",
@@ -569,7 +569,7 @@ const styles = StyleSheet.create({
   },
 
 
-  textReadpostfound5: {
+  textReadpostlost5: {
 
     fontSize: 14,
     fontFamily: "Kanit-Regular",
@@ -581,14 +581,14 @@ const styles = StyleSheet.create({
 
   },
 
-  profilecommentReadpostfound: {
+  profilecommentReadpostlost: {
     marginLeft: -10,
     marginTop: 0,
     width: 40,
     height: 40
   },
 
-  textcommentReadpostfound: {
+  textcommentReadpostlost: {
     marginTop: -15,
     fontSize: 14,
     fontFamily: "Kanit-Regular",
@@ -600,7 +600,7 @@ const styles = StyleSheet.create({
 
   },
 
-  imageReadpostfound: {
+  imageReadpostlost: {
     width: '100%',
 
     //  marginLeft: 20,

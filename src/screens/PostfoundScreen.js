@@ -17,6 +17,8 @@ import ResponsiveImage from 'react-native-responsive-image';
 import axios from 'axios'
 import ImagePicker from 'react-native-image-picker';
 import Geolocation from '@react-native-community/geolocation';
+import Geocoder from 'react-native-geocoding';
+
 
 export default class PostfoundScreen extends React.Component {
   constructor(props) {
@@ -41,7 +43,6 @@ export default class PostfoundScreen extends React.Component {
   onTextChange1 = (value) => {
     this.setState({ signupText1: value })
   }
-
   onTextChange2 = (value) => {
     this.setState({ signupText2: value })
   }
@@ -49,6 +50,7 @@ export default class PostfoundScreen extends React.Component {
   onTextChange3 = (value) => {
     this.setState({ signupText3: value })
   }
+ 
   onTextChange4 = (value) => {
     this.setState({ signupText4: value })
   }
@@ -60,11 +62,24 @@ export default class PostfoundScreen extends React.Component {
   }
   getLocation() {
     Geolocation.getCurrentPosition((info) => {
+
+      Geocoder.init("AIzaSyBr3R31JkS0lWvoxQTnkU-LMjc7yp5m458");
+      Geocoder.from(info.coords.latitude, info.coords.longitude)
+        .then(json => {
+          var addressComponent = json.results[0].address_components[0];
+          this.setState({ signupText4: addressComponent.long_name })
+          // console.warn(addressComponent);
+          // console.warn(this.state.signupText4);
+
+        })
+        .catch(error => console.warn(error));
+
+
       this.setState({ gps: '' })
       this.setState({ gps: info })
       this.setState({ markers: info })
       this.setState({ location_drag: info.coords })
-      console.warn(info);
+      // console.warn(info);
     });
   }
 
@@ -95,7 +110,15 @@ export default class PostfoundScreen extends React.Component {
             coordinate={this.state.gps.coords}
             onDragEnd={(e) => {
               this.setState({ location_drag: e.nativeEvent.coordinate })
-              console.warn('sssss', e.nativeEvent.coordinate)
+              Geocoder.from(e.nativeEvent.coordinate.latitude, e.nativeEvent.coordinate.longitude)
+                .then(json => {
+                  var addressComponent = json.results[0].address_components[0];
+                  this.setState({ signupText4: addressComponent.long_name })
+                  // console.warn(addressComponent);
+                  // console.warn(this.state.signupText4);
+                })
+                .catch(error => console.warn(error));
+              // console.warn('sssss', e.nativeEvent.coordinate)
             }}
           />
 
@@ -103,6 +126,7 @@ export default class PostfoundScreen extends React.Component {
       )
     }
   }
+
   async addPostfound() {
     // if (this.state.signupText1 == '') {
     //   Alert.alert(
@@ -157,8 +181,8 @@ export default class PostfoundScreen extends React.Component {
         type: 'image/jpg'
       });
 
-
-    axios.post('http://192.168.0.105/lostandfound/api/addpostfound.php', data,
+// console.warn(data)
+    axios.post('http://192.168.0.111/lostandfound/api/addpostfound.php', data,
       { headers: { 'Content-Type': 'multipart/form-data' } })
       .then(response => {
         this.props.navigation.goBack();
@@ -176,7 +200,7 @@ export default class PostfoundScreen extends React.Component {
 
   componentDidMount() {
 
-    axios.post('http://192.168.0.105/lostandfound/api/getcategory.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getcategory.php', JSON.stringify({
 
       action: 'category',
 
@@ -193,6 +217,7 @@ export default class PostfoundScreen extends React.Component {
       });
 
     this.getLocation();
+
   }
 
   renderCategory() {
@@ -260,7 +285,6 @@ export default class PostfoundScreen extends React.Component {
     const renderCategory = this.renderCategory;
     return (
       <Container>
-
         <Content>
 
 
@@ -278,7 +302,7 @@ export default class PostfoundScreen extends React.Component {
 
           <Left>
             <Body >
-              <Text style={styles.lableTopicpostfound}>  2. ชนิดสิ่งของ</Text>
+              <Text style={styles.lableTopicpostfound}> 2. ชนิดสิ่งของ</Text>
             </Body>
           </Left>
 
@@ -288,7 +312,6 @@ export default class PostfoundScreen extends React.Component {
               mode="dropdown"
               iosIcon={<Icon name="arrow-down" />}
               style={{ width: undefined }}
-
               placeholder="Select your SIM"
               placeholderStyle={{ color: "#bfc6ea" }}
               placeholderIconColor="#007aff"
@@ -323,7 +346,7 @@ export default class PostfoundScreen extends React.Component {
 
           <CardItem cardBody style={styles.imageReadnews}>
             {this.state.ImageSource === null ?
-              <Image source={{ uri: 'http://192.168.0.105/lostandfound/img_upload/found/default.png' }} style={{ height: 200, width: null, flex: 1 }} /> :
+              <Image source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/found/default.png' }} style={{ height: 200, width: null, flex: 1 }} /> :
               <Image style={{ height: 200, width: null, flex: 1 }} source={this.state.ImageSource} />
             }
 
@@ -365,7 +388,7 @@ export default class PostfoundScreen extends React.Component {
                 <Image
                   source={{
                     uri:
-                      "https://reactnativecode.com/wp-content/uploads/2017/11/Floating_Button.png"
+                      "http://192.168.0.111/lostandfound/img_upload/logo/adventures.png"
                   }}
                   style={styles.FloatingButtonStyle}
                 />
@@ -425,6 +448,8 @@ const styles = StyleSheet.create({
 
   lableTopicpostfound: {
     fontSize: 15,
+    fontFamily: "Kanit-Regular",
+
     paddingBottom: 0,
     paddingTop: 6,
     left: -150,
@@ -437,6 +462,8 @@ const styles = StyleSheet.create({
 
   lableTopicpostfound3: {
     fontSize: 15,
+    fontFamily: "Kanit-Regular",
+
     paddingBottom: 0,
     paddingTop: 6,
     left: -150,
@@ -489,22 +516,29 @@ const styles = StyleSheet.create({
   },
 
   textboxInsert: {
+    fontFamily: "Kanit-Regular",
+
     fontSize: 15
   },
 
   textboxInsert3: {
+    fontFamily: "Kanit-Regular",
+
     fontSize: 15
 
   },
 
   nameButton: {
     fontSize: 15,
+    fontFamily: "Kanit-Regular",
+
     paddingLeft: 5
 
 
   },
 
   addimgButton: {
+    
     marginLeft: 5,
     marginTop: 6,
     width: 400
@@ -512,6 +546,8 @@ const styles = StyleSheet.create({
   },
 
   addimgButton3: {
+    fontFamily: "Kanit-Regular",
+
     marginLeft: 5,
     marginTop: 10,
     marginBottom: 10,
@@ -539,7 +575,9 @@ const styles = StyleSheet.create({
   },
 
   addpostButton: {
-    fontSize: 18,
+    fontFamily: "Kanit-Regular",
+
+    fontSize: 18
 
   }
 

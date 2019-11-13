@@ -121,7 +121,7 @@ export default class SignupScreen extends React.Component {
     }
 
     else {
-      axios.post('http://192.168.0.105/lostandfound/api/getsignup.php', JSON.stringify({
+      axios.post('http://192.168.0.111/lostandfound/api/getsignup.php', JSON.stringify({
 
         action: 'checkUser',
         signup3: this.state.signupText3
@@ -144,7 +144,7 @@ export default class SignupScreen extends React.Component {
               });
 
 
-            axios.post('http://192.168.0.105/lostandfound/api/addsignup.php', data,
+            axios.post('http://192.168.0.111/lostandfound/api/addsignup.php', data,
               { headers: { 'Content-Type': 'multipart/form-data' } })
               .then(response => {
                 this.props.navigation.goBack();
@@ -180,7 +180,7 @@ export default class SignupScreen extends React.Component {
   CheckUser() {
     // console.warn('response.data')
 
-    axios.post('http://192.168.0.105/lostandfound/api/getsignup.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getsignup.php', JSON.stringify({
 
       action: 'checkUser',
 
@@ -261,7 +261,7 @@ export default class SignupScreen extends React.Component {
                 <CardItem style={styles.direction}>
                   <TouchableOpacity onPress={this.selectPhotoTapped.bind(this)}>
                     {this.state.ImageSource === null ?
-                      <Thumbnail style={styles.sizeimageprofile} source={{ uri: 'http://192.168.0.105/lostandfound/img_upload/signup/default.png' }} /> :
+                      <Thumbnail style={styles.sizeimageprofile} source={{ uri: 'http://192.168.0.111/lostandfound/img_upload/signup/default.png' }} /> :
                       <Thumbnail style={styles.sizeimageprofile} source={this.state.ImageSource} />
                     }
                   </TouchableOpacity>
@@ -351,29 +351,31 @@ const styles = StyleSheet.create({
 
 
     fontSize: 13,
+    fontFamily: "Kanit-Regular"
 
   },
 
   nameButton2: {
-    fontSize: 18,
+    fontSize: 20,
     marginTop: 5,
-    fontWeight: '500',
+    fontFamily: "Kanit-Medium",
     marginBottom: 10
   },
 
   nameButton3: {
-    fontSize: 13,
-    paddingLeft: 84,
-    fontWeight: '500',
-    paddingRight: 70
+    fontSize: 15,
+    paddingLeft: 79,
+    paddingRight: 70,
+    fontFamily: "Kanit-Medium"
 
 
   },
 
   nameButton4: {
-    fontSize: 13,
-    paddingLeft: 109,
-    fontWeight: '500',
+    fontSize: 15,
+    fontFamily: "Kanit-Medium",
+
+    paddingLeft: 108,
     paddingRight: 100
   },
 
@@ -386,7 +388,8 @@ const styles = StyleSheet.create({
   iconLogin2: {
     fontSize: 16,
     paddingLeft: 1,
-    paddingRight: 0
+    paddingRight: 0,
+
   },
 
   addimgButton1: {

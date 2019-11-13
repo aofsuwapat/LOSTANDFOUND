@@ -18,7 +18,7 @@ export default class MapPinScreen extends Component {
     Geolocation.getCurrentPosition((info) => {
       this.setState({ gps: info })
       this.setState({ markers: info })
-      console.warn(info);
+      // console.warn(info);
     });
   }
   renderMap() {

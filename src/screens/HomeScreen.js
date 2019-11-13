@@ -1,4 +1,6 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from "react-native";
+import {
+  View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, AsyncStorage
+} from "react-native";
 import React, { Component } from "react";
 import { Logo } from "../components/header/header";
 import { ButtonGroup } from "react-native-elements";
@@ -6,7 +8,7 @@ import { NewsScreen } from "../screens/sub-screen/NewsScreen";
 import { FoundScreen } from "../screens/sub-screen/FoundScreen";
 import { LostScreen } from "../screens/sub-screen/LostScreen";
 import { LoginScreen } from "../screens/LoginScreen";
-
+import SearchBar from 'react-native-searchbar';
 import {
   Container,
   Content,
@@ -18,13 +20,15 @@ import {
   Thumbnail,
   Body,
   CardItem,
-  Left
+  Left,
+  Right
 } from "native-base";
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      selectedIndex: 0
+      selectedIndex: 0,
+      signup_id: ""
     };
     this.updateIndex = this.updateIndex.bind(this);
     this.AddPageFound = this.AddPageFound.bind(this);
@@ -61,11 +65,14 @@ export default class HomeScreen extends React.Component {
     this.props.navigation.navigate('Postlost')
 
   }
-  renderAddButton(menuNo) {
+  search() {
+    // console.warn('555555')
+    this.props.navigation.navigate('Result', { keyword: this.state.keyword.toString(), });
+  }
+  renderAddButton(menuNo, signup_id) {
 
-  
 
-    if (menuNo == 1) {
+    if (menuNo == 1 && signup_id != 'Guest' && signup_id != '') {
       return (<TouchableOpacity
         activeOpacity={0.5}
         onPress={this.AddPageFound}
@@ -74,13 +81,13 @@ export default class HomeScreen extends React.Component {
         <Image
           source={{
             uri:
-              "https://reactnativecode.com/wp-content/uploads/2017/11/Floating_Button.png"
+              "http://192.168.0.111/lostandfound/img_upload/logo/add.png"
           }}
           style={styles.FloatingButtonStyle}
         />
       </TouchableOpacity>)
     }
-    if (menuNo == 2) {
+    if (menuNo == 2 && signup_id != 'Guest' && signup_id != '') {
       return (<TouchableOpacity
         activeOpacity={0.5}
         onPress={this.AddPageLost}
@@ -89,7 +96,7 @@ export default class HomeScreen extends React.Component {
         <Image
           source={{
             uri:
-              "https://reactnativecode.com/wp-content/uploads/2017/11/Floating_Button.png"
+              "http://192.168.0.111/lostandfound/img_upload/logo/add.png"
           }}
           style={styles.FloatingButtonStyle}
         />
@@ -98,13 +105,18 @@ export default class HomeScreen extends React.Component {
 
   }
 
-  componentDidMount() {
+  async  componentDidMount() {
     // console.warn(this.props.navigation);
+    const signup_id = await AsyncStorage.getItem('signup_id')
+    await this.setState({
+      signup_id: signup_id
+    })
+    console.warn(signup_id);
   }
   render() {
-    const component1 = () => <Text>ข่าวสาร</Text>;
-    const component2 = () => <Text>เจอของ</Text>;
-    const component3 = () => <Text>ตามหาของ</Text>;
+    const component1 = () => <Text style={styles.nameButton}>ข่าวสาร</Text>;
+    const component2 = () => <Text style={styles.nameButton}>เจอของ</Text>;
+    const component3 = () => <Text style={styles.nameButton}>ตามหาของ</Text>;
     const renderAddButton = this.renderAddButton;
     const buttons = [
       { element: component1 },
@@ -114,7 +126,29 @@ export default class HomeScreen extends React.Component {
     const { selectedIndex } = this.state;
     const { navigate } = this.props;
     return (
+
       <Container style={{ backgroundColor: "white" }}>
+        <Header style={styles.bg} >
+
+
+            <SearchBar
+              ref={(ref) => this.searchBar = ref}
+              // data={items}
+              placeholder={'ค้นหาสิ่งของ'}
+              onSubmitEditing={this.search.bind(this)}
+              fontFamily={"Kanit-Regular"}
+              fontSize={20}
+              handleChangeText={keyword => this.setState({ keyword })}
+
+            />
+            <Right>
+              <Button transparent style={[styles.searchButton, { zIndex: 1 }]} onPress={() => this.searchBar.show()}>
+                <Icon name="ios-search" style={{ color: 'white' }} />
+              </Button>
+            </Right>
+
+
+        </Header>
         <View>
           <View
             style={{
@@ -140,7 +174,7 @@ export default class HomeScreen extends React.Component {
             />
           </ScrollView>
 
-          {renderAddButton(this.state.selectedIndex)}
+          {renderAddButton(this.state.selectedIndex, this.state.signup_id)}
 
 
 
@@ -188,8 +222,8 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    right: 20,
-    bottom: 50
+    right: 10,
+    bottom: 110
   },
 
   FloatingButtonStyle: {
@@ -204,6 +238,22 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
 
+  nameButton: {
+
+
+    fontSize: 14,
+    fontFamily: "Kanit-Regular"
+
+  },
+
+  nameButton2: {
+
+
+    fontSize: 14,
+    fontFamily: "Kanit-Regular"
+
+  },
+
   ontop: {
     left: 0,
     right: 0,
@@ -212,5 +262,19 @@ const styles = StyleSheet.create({
     margin: 0,
     justifyContent: "center",
     alignItems: "center"
+  },
+
+  bg: {
+    backgroundColor: "#363636"
+  },
+
+
+  barsearch: {
+    justifyContent: "center",
+    paddingLeft: 0,
+    paddingRight: 0,
+    backgroundColor: "#363636",
+    height: 50
+
   }
 });

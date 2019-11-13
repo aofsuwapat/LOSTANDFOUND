@@ -48,7 +48,7 @@ export default class LoginScreen extends React.Component {
 
   addSignup() {
 
-    axios.post('http://192.168.0.105/lostandfound/api/getsignup.php', JSON.stringify({
+    axios.post('http://192.168.0.111/lostandfound/api/getsignup.php', JSON.stringify({
 
       action: 'getLogin',
 
@@ -60,17 +60,17 @@ export default class LoginScreen extends React.Component {
         if (response.data != null && response.data != '') {
           AsyncStorage.setItem('signup_id', response.data.signup_id);
           this.props.navigation.replace('Home')
-        }else{
-        Alert.alert(
-          'คำเตือน!',
-          'ข้อมูลไม่ถูกต้อง',
-          [
-  
-            { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
-          ],
-          { cancelable: false },
-        );
-      }
+        } else {
+          Alert.alert(
+            'คำเตือน!',
+            'ข้อมูลไม่ถูกต้อง',
+            [
+
+              { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
+            ],
+            { cancelable: false },
+          );
+        }
 
       })
       .catch(err => {
@@ -79,6 +79,10 @@ export default class LoginScreen extends React.Component {
 
   }
 
+  Guestlogin() {
+    AsyncStorage.setItem('signup_id', 'Guest');
+    this.props.navigation.replace('Home')
+  }
 
 
 
@@ -103,7 +107,8 @@ export default class LoginScreen extends React.Component {
               <Body style={styles.container}>
 
 
-                <Icon name='ios-cube' style={{ fontSize: 110, color: '#996633' }} />
+
+                <Icon name='ios-cube' style={{ fontSize: 110, color: '#4F4F4F' }} />
 
 
                 <Text style={styles.nameButton2}>
@@ -133,7 +138,7 @@ export default class LoginScreen extends React.Component {
                 </Button>
 
 
-                <Button rounded style={styles.addimgButton3} >
+                <Button onPress={this.Guestlogin.bind(this)} rounded style={styles.addimgButton3} >
                   <Text style={styles.nameButton5}>Guest</Text>
                 </Button>
 
@@ -143,7 +148,7 @@ export default class LoginScreen extends React.Component {
           </Card>
 
         </Content>
-        </Container>
+      </Container>
 
     );
   }
@@ -157,7 +162,7 @@ const styles = StyleSheet.create({
   },
 
   bgLogin: {
-    backgroundColor: "#4CB051"
+    backgroundColor: "#363636"
 
 
   },
@@ -178,39 +183,45 @@ const styles = StyleSheet.create({
 
 
     fontSize: 13,
+    fontFamily: "Kanit-Regular"
 
   },
 
   nameButton2: {
-    fontSize: 18,
+    fontSize: 20,
     marginTop: -5,
-    fontWeight: '500',
-    marginBottom: 20
+    marginBottom: 20,
+    fontFamily: "Kanit-Medium"
+
   },
 
   nameButton3: {
-    fontSize: 13,
+    fontSize: 15,
     paddingLeft: 105,
-    fontWeight: '500',
 
-    paddingRight: 100
+    paddingRight: 100,
+    fontFamily: "Kanit-Medium"
+
 
 
   },
 
   nameButton4: {
-    fontSize: 13,
-    paddingLeft: 70,
-    fontWeight: '500',
+    fontSize: 15,
+    paddingLeft: 60,
 
-    paddingRight: 60
+    paddingRight: 60,
+    fontFamily: "Kanit-Medium"
+
   },
 
   nameButton5: {
-    fontSize: 13,
+    marginTop: 20,
+    fontSize: 15,
     paddingLeft: 70,
-    fontWeight: '500',
-    paddingRight: 60
+    paddingRight: 60,
+    fontFamily: "Kanit-Medium"
+
   },
 
   iconLogin: {

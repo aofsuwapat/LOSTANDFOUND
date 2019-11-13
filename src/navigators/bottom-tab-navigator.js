@@ -40,7 +40,6 @@ const BottomTabNavigator = createBottomTabNavigator(
     // ข้อความ: MessageNavigator,
     // แจ้งเตือน: NotificationNavigator,
     โปรไฟล์: ProfileNavigator,
-
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
