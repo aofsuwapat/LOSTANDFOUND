@@ -111,7 +111,7 @@ export default class HomeScreen extends React.Component {
     await this.setState({
       signup_id: signup_id
     })
-    console.warn(signup_id);
+    // console.warn(signup_id);
   }
   render() {
     const component1 = () => <Text style={styles.nameButton}>ข่าวสาร</Text>;

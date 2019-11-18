@@ -127,7 +127,7 @@ export default class SignupScreen extends React.Component {
         signup3: this.state.signupText3
       }))
         .then(response => {
-          console.warn(response.data)
+          // console.warn(response.data)
           if (response.data == 0) {
 
             var data = new FormData();

@@ -151,7 +151,7 @@ export default class ProfileScreen extends React.Component {
 
     var arr = [];
     if (this.state.signup_id == 'Guest' && this.state.signup_id != undefined) {
-      console.warn(this.state.signup_id)
+      // console.warn(this.state.signup_id)
       arr.push(
 
         <Content>

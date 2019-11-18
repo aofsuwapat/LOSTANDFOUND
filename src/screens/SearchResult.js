@@ -86,7 +86,7 @@ export default class SearchResult extends React.Component {
 
   async getFound() {
     const signup_id = await AsyncStorage.getItem('signup_id')
-    console.warn(this.props.navigation.state.params.keyword.toString())
+    // console.warn(this.props.navigation.state.params.keyword.toString())
     await axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
 
       signup_id: signup_id,
@@ -99,7 +99,7 @@ export default class SearchResult extends React.Component {
           dataSource: response.data,
 
         })
-        console.warn(response.data)
+        // console.warn(response.data)
 
       })
       .catch(err => {
@@ -110,7 +110,7 @@ export default class SearchResult extends React.Component {
 
   async getLost() {
     const signup_id = await AsyncStorage.getItem('signup_id')
-    console.warn(this.props.navigation.state.params.keyword.toString())
+    // console.warn(this.props.navigation.state.params.keyword.toString())
     await axios.post('http://192.168.0.111/lostandfound/api/getlost.php', JSON.stringify({
 
       signup_id: signup_id,
@@ -123,7 +123,7 @@ export default class SearchResult extends React.Component {
           dataSource: response.data,
 
         })
-        console.warn(response.data)
+        // console.warn(response.data)
 
       })
       .catch(err => {
@@ -141,7 +141,7 @@ export default class SearchResult extends React.Component {
       selectedIndex : 0
     })
     
-    console.warn(this.state.selectedIndex)
+    // console.warn(this.state.selectedIndex)
 
   }
 
@@ -152,11 +152,11 @@ export default class SearchResult extends React.Component {
 
     if (selectedIndex == 0) {
       await this.getFound();
-      console.warn(selectedIndex)
+      // console.warn(selectedIndex)
     }
     else if (selectedIndex == 1) {
       await this.getLost();
-      console.warn(selectedIndex)
+      // console.warn(selectedIndex)
     }
 
 
@@ -215,6 +215,21 @@ export default class SearchResult extends React.Component {
                           </Text>
                         </Button>
 
+
+                        {this.state.dataSource[i].found_check == 1 ?
+                         <Button transparent >
+                         <Icon
+                           active
+                           name="ios-checkmark-circle-outline"
+                           style={{fontSize: 19, color: '#4CB051',  marginLeft: -15}}
+                         />
+                         <Text style={styles.fontLikeComent5}>
+                           คืนแล้ว
+                         </Text>
+                       </Button>: <Text></Text> 
+                        }
+
+
                       </Left>
 
                       <Right>
@@ -222,6 +237,9 @@ export default class SearchResult extends React.Component {
                           {this.state.dataSource[i].found_date_format}
                         </Text>
                       </Right>
+
+                    
+
 
                     </CardItem>
                   </Body>
@@ -325,6 +343,22 @@ export default class SearchResult extends React.Component {
                             {this.state.dataSource[i].count_comment}
                           </Text>
                         </Button>
+
+
+
+                        {this.state.dataSource[i].lost_check == 1 ?
+                          <Button transparent >
+                            <Icon
+                              active
+                              name="ios-checkmark-circle-outline"
+                              style={{ fontSize: 19, color: '#4CB051', marginLeft: -15 }}
+                            />
+                            <Text style={styles.fontLikeComent5}>
+                              ได้คืนแล้ว
+                         </Text>
+                          </Button> : <Text></Text>
+                        }
+
 
                       </Left>
 
@@ -531,5 +565,13 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Regular",
 
     paddingLeft: 8
+  },
+  
+  fontLikeComent5: {
+    fontFamily: "Kanit-Regular",
+    color: "#4CB051",
+    fontSize: 12,
+    paddingLeft: 5
   }
+
 });

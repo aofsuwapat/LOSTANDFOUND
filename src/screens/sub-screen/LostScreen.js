@@ -57,8 +57,10 @@ export class LostScreen extends React.Component {
 
   async Likelost(lost_id) {
     const signup_id = await AsyncStorage.getItem('signup_id')
+    // console.warn(signup_id)
     if (signup_id != 'Guest') {
-      // console.warn(signup_id)
+
+
       axios.post('http://192.168.0.111/lostandfound/api/getlikelost.php', JSON.stringify({
 
         action: 'addpostlost',
@@ -74,7 +76,6 @@ export class LostScreen extends React.Component {
         .catch(err => {
           throw err;
         });
-
     }
   }
 
@@ -156,6 +157,20 @@ export class LostScreen extends React.Component {
                             {this.state.dataSource[i].count_comment}
                           </Text>
                         </Button>
+
+
+                        {this.state.dataSource[i].lost_check == 1 ?
+                          <Button transparent >
+                            <Icon
+                              active
+                              name="ios-checkmark-circle-outline"
+                              style={{ fontSize: 19, color: '#4CB051', marginLeft: -15 }}
+                            />
+                            <Text style={styles.fontLikeComent5}>
+                              ได้คืนแล้ว
+                         </Text>
+                          </Button> : <Text></Text>
+                        }
 
                       </Left>
 
@@ -327,5 +342,12 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Regular",
 
     paddingLeft: 8
+  },
+
+  fontLikeComent5: {
+    fontFamily: "Kanit-Regular",
+    color: "#4CB051",
+    fontSize: 12,
+    paddingLeft: 5
   }
 });

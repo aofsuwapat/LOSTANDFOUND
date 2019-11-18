@@ -128,41 +128,55 @@ export default class PostfoundScreen extends React.Component {
   }
 
   async addPostfound() {
-    // if (this.state.signupText1 == '') {
-    //   Alert.alert(
-    //     'คำเตือน!',
-    //     'กรุณากรอกหัวข้อ',
-    //     [
+    // console.warn('5555', this.state.ImageUri)
+    if (this.state.signupText1 == '') {
+      Alert.alert(
+        'คำเตือน!',
+        'กรุณากรอกหัวข้อ',
+        [
 
-    //       { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
-    //     ],
-    //     { cancelable: false },
-    //   );
-    // }
-    // else if (this.state.signupText2 == '') {
-    //   Alert.alert(
-    //     'คำเตือน!',
-    //     'กรุณาใส่ชนิด',
-    //     [
+          { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false },
+      );
+    }
+    else if (this.state.selected2 == '') {
+      Alert.alert(
+        'คำเตือน!',
+        'กรุณาใส่ชนิด',
+        [
 
-    //       { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
-    //     ],
-    //     { cancelable: false },
-    //   );
-    // }
-    // else if (this.state.signupText3 == '') {
-    //   Alert.alert(
-    //     'คำเตือน!',
-    //     'กรุณากรอกรายละเอียด',
-    //     [
+          { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false },
+      );
+    }
+    else if (this.state.signupText3 == '') {
+      Alert.alert(
+        'คำเตือน!',
+        'กรุณากรอกรายละเอียด',
+        [
 
-    //       { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
-    //     ],
-    //     { cancelable: false },
-    //   );
-    // }
+          { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false },
+      );
+    }
+  
+    else if (this.state.ImageUri == '' || this.state.ImageUri == undefined) {
+      Alert.alert(
+        'คำเตือน!',
+        'กรุณาใส่รูปภาพ',
+        [
 
-    // else {
+          { text: 'ตกลง', onPress: () => console.log('OK Pressed') },
+        ],
+        { cancelable: false },
+      );
+    }
+   
+
+    else {
     const signup_id = await AsyncStorage.getItem('signup_id')
 
     var data = new FormData();
@@ -174,12 +188,14 @@ export default class PostfoundScreen extends React.Component {
     data.append('signup4', this.state.signupText4);
     data.append('lat', this.state.location_drag.latitude);
     data.append('lon', this.state.location_drag.longitude);
-    data.append('image',
-      {
-        uri: this.state.ImageUri,
-        name: 'image',
-        type: 'image/jpg'
-      });
+    if (this.state.ImageUri != '' && this.state.ImageUri != null) {
+      data.append('image',
+        {
+          uri: this.state.ImageUri,
+          name: 'image',
+          type: 'image/jpg'
+        });
+    }
 
 // console.warn(data)
     axios.post('http://192.168.0.111/lostandfound/api/addpostfound.php', data,
@@ -193,7 +209,7 @@ export default class PostfoundScreen extends React.Component {
   }
 
 
-  // }
+  }
 
 
 

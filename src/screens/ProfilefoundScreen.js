@@ -157,6 +157,41 @@ export default class ProfilefoundScreen extends React.Component {
 
   }
 
+  checkPostfound = (found_id) => {
+
+    Alert.alert(
+      '',
+      'ต้องการแจ้งคืนของแล้ว ?',
+      [
+        {
+          text: 'ยกเลิก',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {
+          text: 'ตกลง',
+          onPress: () => {
+            axios.post('http://192.168.0.111/lostandfound/api/getfound.php', JSON.stringify({
+
+              action: 'checkpostfound',
+              id: found_id
+            }))
+              .then(response => {
+                this.getFound();
+              })
+              .catch(err => {
+                throw err;
+              });
+          }
+        },
+      ],
+      { cancelable: false },
+    );
+
+
+
+
+  }
 
 
 
@@ -212,9 +247,12 @@ export default class ProfilefoundScreen extends React.Component {
                   <TouchableOpacity style={styles.bottonDelete2}
                     onPress={() => {
                       this.setState({
-                        titles: [{ title: 'แก้ไข', action: () => { this.props.navigation.navigate('Editfound', { found_id: found_id }); } },
-                        { title: 'ลบ', actionStyle: 'destructive', action: () => { this.deletePostfound(found_id); } },
-                        { title: 'ยกเลิก', actionStyle: 'cancel', action: () => { console.warn('click Cancel'); } }]
+                        titles: [
+                          { title: 'แจ้งคืนของแล้ว', action: () => { this.checkPostfound(found_id); } },
+                          { title: 'แก้ไข', action: () => { this.props.navigation.navigate('Editfound', { found_id: found_id }); } },
+                          { title: 'ลบ', actionStyle: 'destructive', action: () => { this.deletePostfound(found_id); } },
+                          { title: 'ยกเลิก', actionStyle: 'cancel', action: () => { console.warn('click Cancel'); } }
+                        ]
                       }, () => { this.refs.picker.show(); })
                     }}
                   >
@@ -235,6 +273,8 @@ export default class ProfilefoundScreen extends React.Component {
                     <Text style={styles.textCategoty}>
                       {this.state.dataSource[i].category_name}
                     </Text>
+
+
 
 
 
@@ -270,6 +310,23 @@ export default class ProfilefoundScreen extends React.Component {
                             {this.state.dataSource[i].count_comment}
                           </Text>
                         </Button>
+
+
+                        {this.state.dataSource[i].found_check == 1 ?
+                         <Button transparent >
+                         <Icon
+                           active
+                           name="ios-checkmark-circle-outline"
+                           style={{fontSize: 19, color: '#4CB051',  marginLeft: -15}}
+                         />
+                         <Text style={styles.fontLikeComent5}>
+                           คืนแล้ว
+                         </Text>
+                       </Button>: <Text></Text> 
+                        }
+                       
+
+
 
                       </Left>
 
@@ -479,5 +536,12 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Regular",
     fontSize: 12,
     paddingLeft: 8
+  },
+  
+  fontLikeComent5: {
+    fontFamily: "Kanit-Regular",
+    color: "#4CB051",
+    fontSize: 12,
+    paddingLeft: 5
   }
 });

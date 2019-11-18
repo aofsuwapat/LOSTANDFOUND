@@ -158,6 +158,20 @@ export class FoundScreen extends React.Component {
                           </Text>
                         </Button>
 
+
+                        {this.state.dataSource[i].found_check == 1 ?
+                         <Button transparent >
+                         <Icon
+                           active
+                           name="ios-checkmark-circle-outline"
+                           style={{fontSize: 19, color: '#4CB051',  marginLeft: -15}}
+                         />
+                         <Text style={styles.fontLikeComent5}>
+                           คืนแล้ว
+                         </Text>
+                       </Button>: <Text></Text> 
+                        }
+
                       </Left>
 
                       <Right>
@@ -328,5 +342,12 @@ const styles = StyleSheet.create({
     fontFamily: "Kanit-Regular",
 
     paddingLeft: 8
+  },
+  
+  fontLikeComent5: {
+    fontFamily: "Kanit-Regular",
+    color: "#4CB051",
+    fontSize: 12,
+    paddingLeft: 5
   }
 });
